@@ -10,7 +10,6 @@ const userController = {
     signUp: async (req, res) => {
         try {
             const { name, email, password } = req.body
-            console.log(req.body)
 
             if (!name || !email || !password) {
                 return res.status(400).send({
@@ -67,8 +66,8 @@ const userController = {
 
             const user = await User.findOne({ email })
             if (user?._id) {
-                const match =await bcrypt.compare(password, user?.password)
-                console.log(match,'match')
+                const match = await bcrypt.compare(password, user?.password)
+
                 if (!match) {
                     return res.status(404).send({
                         status: 404,
@@ -95,7 +94,39 @@ const userController = {
                 message: "Internal Server Error"
             })
         }
-    }
+    },
+    getUserInformation: async (req, res) => {
+        try {
+
+            const result = await User.findOne({ _id: req.decoded.id }).select('-password')
+            if (result) {
+                res.send({
+                    status: true,
+                    message: "success",
+                    result
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    getAllUser: async (req, res) => {
+        try {
+
+            const result = await User.find({ _id: { $ne: req.decoded.id } }).select('-password')
+            if (result) {
+                res.send({
+                    status: true,
+                    message: "success",
+                    result
+                })
+            }
+            console.log('getAllUser',result)
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
 }
 
 
