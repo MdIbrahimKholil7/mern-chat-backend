@@ -6,9 +6,11 @@ exports.verifyJwt = (req, res, next) => {
         return res.status(401).send({ message: 'unAuthorized access' })
     }
     const token = authorization.split(' ')[1]
+    console.log(token)
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
 
         if (err) {
+            console.log(err)
             return res.status(403).send({ message: 'Forbidden' })
         }
 

@@ -75,6 +75,7 @@ const userController = {
                     })
                 }
                 const accessToken = jwtToken(user._id)
+                console.log(accessToken)
                 res.status(201).send({
                     status: 201,
                     message: "Success",
@@ -121,7 +122,7 @@ const userController = {
                     result
                 })
             }
-            console.log('getAllUser',result)
+            // console.log('getAllUser',result)
         } catch (error) {
             console.log(error)
         }
