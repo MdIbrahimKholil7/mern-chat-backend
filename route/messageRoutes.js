@@ -5,5 +5,6 @@ const router = express.Router()
 
 
 router.post('/addMessage', verifyJwt, messageController.addMessage)
+router.get('/getMessages/:friendId', verifyJwt, messageController.getMessages)
 
 module.exports = router
