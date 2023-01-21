@@ -114,7 +114,7 @@ const userController = {
     getAllUser: async (req, res) => {
         try {
 
-            const result = await User.find({ _id: { $ne: req.decoded.id } }).select('-password')
+            const result = await User.find({ _id: { $ne: req.decoded.id } }).sort({createdAt:-1}).select('-password')
             if (result) {
                 res.send({
                     status: true,

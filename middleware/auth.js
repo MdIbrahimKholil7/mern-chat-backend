@@ -6,7 +6,8 @@ exports.verifyJwt = (req, res, next) => {
         return res.status(401).send({ message: 'unAuthorized access' })
     }
     const token = authorization.split(' ')[1]
-    console.log(token)
+    console.log(token, 'token')
+    if (!token || token === 'undefined') return res.status(401).send({ message: 'Forbidden' })
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
 
         if (err) {
@@ -19,3 +20,4 @@ exports.verifyJwt = (req, res, next) => {
 
     })
 }
+
