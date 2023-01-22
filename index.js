@@ -8,6 +8,7 @@ const run = require("./database/database");
 const port = process.env.PORT || 8080
 const userRoute = require('./route/userRoutes.js')
 const messageRoute = require('./route/messageRoutes.js')
+const notificationRoute = require('./route/notificationRoutes.js')
 
 app.use(cors())
 app.use(express.json())
@@ -18,6 +19,7 @@ run()
 
 app.use('/api/v1/user', userRoute)
 app.use('/api/v1/message', messageRoute)
+app.use('/api/v1/notification', notificationRoute)
 
 // for checking 
 app.get('/', async (req, res) => {

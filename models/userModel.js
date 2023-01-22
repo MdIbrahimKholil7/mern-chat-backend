@@ -28,7 +28,6 @@ const userSchema = mongoose.Schema(
     }
 )
 
-
 userSchema.pre("save", async function (next) {
     if (!this.isModified) {
         next();

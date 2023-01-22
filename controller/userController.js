@@ -32,7 +32,7 @@ const userController = {
                 password
             })
 
-            console.log(result)
+          
             if (result) {
 
                 const accessToken = jwtToken(result._id)
