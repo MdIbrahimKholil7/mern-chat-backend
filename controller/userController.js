@@ -26,12 +26,13 @@ const userController = {
                 })
             }
 
-            const result = await User.create({
+            let result = await User.create({
                 name,
                 email,
                 password
             })
-
+            result = result.toObject()
+            delete result.password
             if (result) {
 
                 const accessToken = jwtToken(result._id)
@@ -65,10 +66,11 @@ const userController = {
                 })
             }
 
-            const user = await User.findOne({ email })
+            let user = await User.findOne({ email })
             if (user?._id) {
                 const match = await bcrypt.compare(password, user?.password)
-
+                user = user.toObject()
+                delete user.password
                 if (!match) {
                     return res.status(404).send({
                         status: 404,
