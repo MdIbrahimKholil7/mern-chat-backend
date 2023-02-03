@@ -5,6 +5,7 @@ exports.addNotificationService = async (data) => {
     return result
 }
 exports.getNotificationService = async (id) => {
+
     const result = await Notification.aggregate([
         {
             $match: {
@@ -17,11 +18,11 @@ exports.getNotificationService = async (id) => {
         {
             $group: {
                 _id: "$sender",
-                total: { $sum: 1 }
+                total: { $sum: 1 },
             }
         },
-
     ])
+
     return result
 }
 exports.resetNotificationService = async (id) => {

@@ -4,13 +4,14 @@ const userSchema = require('../models/userModel');
 const jwtToken = require('../utils/tokenCreate');
 const User = new mongoose.model('User', userSchema)
 const bcrypt = require('bcrypt');
+const { getLastMessage } = require('../services/messageService');
 
 const userController = {
 
     signUp: async (req, res) => {
+
         try {
             const { name, email, password } = req.body
-
             if (!name || !email || !password) {
                 return res.status(400).send({
                     message: "Please enter all the data"
@@ -18,7 +19,6 @@ const userController = {
             }
 
             const userFound = await User.find({ email })
-
             if (userFound.length > 0) {
                 return res.status(400).send({
                     status: 401,
@@ -32,7 +32,6 @@ const userController = {
                 password
             })
 
-          
             if (result) {
 
                 const accessToken = jwtToken(result._id)
@@ -46,6 +45,7 @@ const userController = {
                 })
 
             }
+
         } catch (error) {
 
             res.status(500).json({
@@ -56,6 +56,7 @@ const userController = {
     },
     login: async (req, res) => {
         try {
+
             const { email, password } = req.body
             if (!password && !email) {
                 return res.status(401).send({
@@ -75,7 +76,6 @@ const userController = {
                     })
                 }
                 const accessToken = jwtToken(user._id)
-                console.log(accessToken)
                 res.status(201).send({
                     status: 201,
                     message: "Success",
@@ -98,7 +98,6 @@ const userController = {
     },
     getUserInformation: async (req, res) => {
         try {
-
             const result = await User.findOne({ _id: req.decoded.id }).select('-password')
             if (result) {
                 res.send({
@@ -114,7 +113,27 @@ const userController = {
     getAllUser: async (req, res) => {
         try {
 
-            const result = await User.find({ _id: { $ne: req.decoded.id } }).sort({createdAt:-1}).select('-password')
+            const friend = []
+            const result = await User.find({ _id: { $ne: req.decoded.id } }).sort({ createdAt: -1 }).select('-password')
+            for (let i = 0; i < result.length; i++) {
+                const data = await getLastMessage(req.decoded.id, result[i]._id)
+                friend.push({ friendInfo: result[i], lastMsg: data })
+            }
+            if (result) {
+                res.send({
+                    status: true,
+                    message: "success",
+                    result: friend
+                })
+            }
+            // console.log('getAllUser',result)
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    updateUser: async (req, res) => {
+        try {
+            const result = await User.findOneAndUpdate({ _id: req.decoded.id }, { $set: req.body })
             if (result) {
                 res.send({
                     status: true,
