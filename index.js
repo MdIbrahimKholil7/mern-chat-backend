@@ -11,10 +11,9 @@ const messageRoute = require('./route/messageRoutes.js')
 const notificationRoute = require('./route/notificationRoutes.js')
 
 app.use(cors({
-    origin: [
-        "http://localhost:3000",
-        "https://chat-frontend-mocha.vercel.app/"
-    ]
+    origin: true,
+    credentials:true,
+    optionSuccessStatus:200
 }))
 app.use(express.json())
 app.use(cookieParser())
